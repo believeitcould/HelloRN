@@ -10,7 +10,7 @@ export default class Video extends Component {
 	render() {
 		return (
             <View>
-                <Text> video </Text>
+                <Text> article </Text>
             </View>
 		)
 	}
