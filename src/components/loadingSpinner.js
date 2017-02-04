@@ -3,14 +3,19 @@ import {
 	AppRegistry,
   	StyleSheet,
   	Text,
-  	View
+  	View,
+    ActivityIndicator
 } from 'react-native'
 
-export default class Article extends Component {
+export default class LoadingSpinner extends Component {
 	render() {
 		return (
-			<View style={styles.container}>
-                <Text> article </Text>
+            <View style={styles.container}>
+                <ActivityIndicator
+                    animating={this.props.animating}
+					color='#FFDB42'
+					size='large'
+				/>
             </View>
 		)
 	}
@@ -21,6 +26,5 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: '#ffdb42',
 	},
 })

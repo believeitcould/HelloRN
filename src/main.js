@@ -10,18 +10,20 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Tabs from 'react-native-tabs'
 import { Scene, Router, TabBar, Modal, Schema, Actions, Reducer, ActionConst } from 'react-native-router-flux'
 
-import Article from './tabs/article'
+import Article from './tabs/article/article'
+import ArticleContent from './tabs/article/content'
 import Image from './tabs/image'
 import Music from './tabs/music'
 import Video from './tabs/video'
 
+console.disableYellowBox = true    //关闭warning
+
 class TabIcon extends React.Component {
     render() {
-        console.log(this.props)
         return (
-            <View style={{justifyContent: 'center',alignItems: 'center'}}>
-                <Icon name={this.props.tabIcon} size={20} color={this.props.selected ? "#ffdb42" : '#bbb'} />
-                <Text style={{color: this.props.selected ? '#ffdb42' :'#bbb',marginTop:5,fontSize:12}}>{this.props.title}</Text>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <Icon name={this.props.tabIcon} size={20} color={this.props.selected ? "#FFDB42" : '#BBB'} />
+                <Text style={{color: this.props.selected ? '#FFDB42' : '#BBB', marginTop: 5, fontSize:12}}>{this.props.title}</Text>
             </View>
             
         )
@@ -39,23 +41,22 @@ const reducerCreate = params => {
 export default class Main extends Component {
 	render() {
 		return (
-            <Router createReducer={reducerCreate} sceneStyle={{backgroundColor:'#F7F7F7'}}>
-                <Scene key="modal" component={Modal} >
-                    <Scene key="root" hideNavBar={true}>
-                        <Scene key="tabbar" tabs={true} tabBarStyle={{backgroundColor:'#fff',borderTopWidth:.5,borderTopColor:'#ccc'}}>
-                            <Scene key="tab1"  initial={true} title="文章" icon={TabIcon} tabIcon="home" component={Article} navigationBarStyle={{backgroundColor:'red'}} titleStyle={{color:'white'}} />
-                            <Scene key="tab2" title="妹图" icon={TabIcon} tabIcon="circle-o">
-                                <Scene key="tab2_1" component={Music} title="Tab #2_1" onLeft={()=>alert("Left button!")} leftTitle="Left"/>
-                                <Scene key="tab2_2" component={Music} title="Tab #2_2"/>
-                            </Scene>
-                            <Scene key="tab4" component={Video} title="歌单" hideNavBar={true} icon={TabIcon} tabIcon="music" />
-                            <Scene key="tab5" component={Video} title="视频" icon={TabIcon} tabIcon="tv" />
+            <Router>
+                <Scene key="root" hideNavBar={true}>
+                    <Scene key="tabbar" tabs={true} tabBarStyle={{backgroundColor: '#FFF', borderTopWidth: 1, borderTopColor: '#BBB'}}>
+                        <Scene key="tab1" initial={true} title="知乎" icon={TabIcon} tabIcon="home" navigationBarStyle={{backgroundColor: '#ffdb42'}}>
+                            <Scene key="article" component={Article} title="知乎" />
+                            <Scene key="articleContent" component={ArticleContent} title='文章内容' hideTabBar={true} backTitle=''/>
                         </Scene>
+                        <Scene key="tab2" title="妹图" icon={TabIcon} tabIcon="circle-o" navigationBarStyle={{backgroundColor: '#ffdb42'}}>
+                            <Scene key="tab2_1" component={Image} title="OOXX" />
+                        </Scene>
+                        <Scene key="tab3" component={Music} title="歌单" icon={TabIcon} tabIcon="music" navigationBarStyle={{backgroundColor: '#ffdb42'}} />                               
+                        <Scene key="tab4" component={Video} title="视频" icon={TabIcon} tabIcon="tv" navigationBarStyle={{backgroundColor: '#ffdb42'}} />
                     </Scene>
-                    <Scene key="error" component={Error}/>
                 </Scene>
+                
             </Router>
-            
 		)
 	}
 }
@@ -65,7 +66,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: '#F5FCFF',
+		backgroundColor: '#FFF',
 	},
 })
 // <Scene key="register" component={Register} title="Register"/>
@@ -88,3 +89,25 @@ const styles = StyleSheet.create({
 //                 <Music tabLabel="music" />
 //                 <Video tabLabel="video" />
 //             </ScrollableTabView>
+
+
+// <Router createReducer={reducerCreate} sceneStyle={{backgroundColor:'#F7F7F7'}}>
+//                 <Scene key="modal" component={Modal} >
+//                     <Scene key="root" hideNavBar={true}>
+//                         <Scene key="tabbar" tabs={true} tabBarStyle={{backgroundColor:'#fff',borderTopWidth:.5,borderTopColor:'#ccc'}}>
+//                             <Scene key="tab1" initial={true} title="知乎" icon={TabIcon} tabIcon="home" component={Article} navigationBarStyle={{backgroundColor: '#ffdb42'}} titleStyle={{color:'black'}} />
+//                             <Scene key="tab2" title="妹图" icon={TabIcon} tabIcon="circle-o">
+//                                 <Scene key="tab2_1" component={Image} title="Tab #2_1" onLeft={()=>alert("Left button!")} leftTitle="Left"/>
+//                                 <Scene key="tab2_2" component={Image} title="Tab #2_2" />
+//                             </Scene>
+//                             <Scene key="tab4" title="歌单" hideNavBar={true} icon={TabIcon} tabIcon="music">
+//                                 <Scene key="dddd" component={Music} />
+//                                 <Scene key="articleContent" component={ArticleContent} />
+//                             </Scene>
+//                             <Scene key="tab5" component={Video} title="视频" icon={TabIcon} tabIcon="tv" />
+//                         </Scene>
+                        
+//                     </Scene>
+//                     <Scene key="error" component={Error} />
+//                 </Scene>
+//             </Router>

@@ -3,14 +3,16 @@ import {
 	AppRegistry,
   	StyleSheet,
   	Text,
-  	View
+  	View,
+	WebView
 } from 'react-native'
 
 export default class Image extends Component {
 	render() {
 		return (
             <View>
-                <Text> image </Text>
+                
+				<Text>	2322</Text>
             </View>
 		)
 	}
