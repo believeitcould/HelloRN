@@ -6,7 +6,6 @@ import {
   	Text,
 	Image,
   	View,
-	WebView,
 	Slider,
 	TouchableOpacity,
 	ListView,
@@ -17,37 +16,43 @@ import { Actions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Video from 'react-native-video'
 import Modal from 'react-native-modalbox'
+import Toast from 'react-native-root-toast'
 import LoadingSpinner from '../components/loadingSpinner'
 
 let deviceWidth = Dimensions.get('window').width
 
-const SongItem = ({ data, rowID }) => {
-	let _this = this
+const SongItem = ({ data, rowID, t }) => {
+	let current = t.state.currentSong == data
 	return (
-		<TouchableOpacity onPress={() => console.log(rowID)}>
+		<TouchableOpacity
+			onPress={() => {
+				t.setState({
+					sliderValue: 0,
+					current: '00:00',
+					videoPause: false,
+					playButton: 'pause-circle',
+					currentSong: t.state.songs[rowID]
+					},t.refs.modal.close())
+				}
+			}
+		>
 			<View style={{
 				flexDirection: 'row',
 				justifyContent: 'space-between',
 				backgroundColor: '#fff',
-				alignItems: 'center'
+				alignItems: 'center',
+				padding: 15
 				}}
 			>
-				<View style={{flexDirection: 'row', alignItems: 'flex-end',marginLeft: 10}}>
-				<Text>{data.name}</Text>
-				<Text style={{fontSize: 11, color: '#AAA'}}> - {data.artists[0].name}</Text>
-				</View>
-							
-				<TouchableWithoutFeedback
-					onPress={() => {
-						{/*console.log(_this.state)*/}
-					}
-				}>
-					<Icon
-						name='times'
-						size={20} color='#CCC'
-						style={{padding: 10}}
-					/>
-				</TouchableWithoutFeedback>
+				<View style={{flexDirection: 'row', alignItems: 'flex-end',}}>
+				<Text style={{color: current ? 'red' : 'black'}}>{data.name}</Text>
+				<Text style={{fontSize: 11, color: current ? 'red' : '#AAA'}}> - {data.artists[0].name}</Text>
+			</View>
+				{current ?
+					<Icon name='play' size={12} color='red' />
+					:
+					null
+				}		
 			</View>
 		</TouchableOpacity>
 	)
@@ -59,14 +64,13 @@ export default class Music extends Component {
 		super()
 		const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
 		this.state = {
-			songs: ds,
+			songDS: ds,
+			songs: [],
 			currentSong: {},
 			sliderValue: 0,
-			videoUri: '',
 			videoPause: true,
 			playButton: 'play-circle',
 			current: '00:00',
-			duration: this._formatTime(Math.floor(213263 / 1000))
 		}
   	}
 
@@ -86,14 +90,14 @@ export default class Music extends Component {
 				// 取前20首
 				songs.length = 20
 				this.setState({
-					songs: this.state.songs.cloneWithRows(songs),
+					songDS: this.state.songDS.cloneWithRows(songs),
+					songs: songs,
 					currentSong: songs[0]
-				},console.log(songs[0]))
+				})
 			})
 	}
 
 	_playButton() {
-		console.log(123)
 		this.setState({
 			playButton: this.state.videoPause ? 'pause-circle' : 'play-circle',
 			videoPause: !this.state.videoPause
@@ -107,7 +111,6 @@ export default class Music extends Component {
 			sliderValue: val,
 			current: this._formatTime(Math.floor(data.currentTime))
 		})
-		console.log(this._formatTime(Math.floor(data.currentTime)))
 	}
 
 	_formatTime(time) {
@@ -123,7 +126,7 @@ export default class Music extends Component {
 		if (!this.state.currentSong.name) return <LoadingSpinner animating={true} /> 
 		return (
 			<View style={styles.container}>
-				{ this.state.videoUri ?
+				{ this.state.songs.length != 0 ?
 					<Video 
 						source={{uri: this.state.currentSong.mp3Url}}   // Can be a URL or a local file.
 						ref='video'                           // Store reference
@@ -131,12 +134,35 @@ export default class Music extends Component {
 						volume={1.0}                   // 0 is muted, 1 is normal.
 						muted={false}                  // Mutes the audio entirely.
 						paused={this.state.videoPause}                 // Pauses playback entirely.
-						repeat={true}                  // Repeat forever.
+						repeat={false}                  // Repeat forever.
 						playInBackground={false}       // Audio continues to play when app entering background.
 						playWhenInactive={false}       // [iOS] Video continues to play when control or notification center are shown.
 						progressUpdateInterval={250.0} // [iOS] Interval to fire onProgress (default to ~250ms)
 						onProgress={this._onProgress.bind(this)}
-						onError={(e) => console.log(e)}
+						onEnd={() => {
+							let index = this.state.songs.indexOf(this.state.currentSong)
+							index = index == this.state.songs.length-1 ? 0 : index+1
+							this.setState({
+								currentSong: this.state.songs[index],
+								sliderValue: 0,
+								current: '00:00',
+							})
+						}}
+						onError={(e) => {
+							console.log(e)
+							Toast.show('mp3资源出错',{
+								position: Toast.positions.CENTER,
+								onHidden: () => {
+									let index = this.state.songs.indexOf(this.state.currentSong)
+									index = index == this.state.songs.length-1 ? 0 : index+1
+									this.setState({
+										currentSong: this.state.songs[index],
+										sliderValue: 0,
+										current: '00:00',
+									})
+								}
+							})
+						}}
 					/>
 					:
 					null
@@ -177,17 +203,17 @@ export default class Music extends Component {
 						step={1}
 						minimumTrackTintColor='#FFDB42'
 					/>
-					<TouchableOpacity onPress={() => this.refs.modal4.open()}>
+					<TouchableOpacity onPress={() => this.refs.modal.open()}>
 						<Icon name='list-ul' size={30} color='#FFDB42' />
 					</TouchableOpacity>
 				</View>
 				
-				<Modal style={styles.modal} position={"bottom"} ref={"modal4"}>
+				<Modal style={styles.modal} position={"bottom"} ref='modal'>
 					<ListView
- 						dataSource={this.state.songs}
- 						renderRow={(rowData, sectionID, rowID) => <SongItem data={rowData} key={rowID} rowID={rowID} />}
+ 						dataSource={this.state.songDS}
+ 						renderRow={(rowData, sectionID, rowID) => <SongItem data={rowData} key={rowID} rowID={rowID} t={this} />}
  						renderSeparator={(sectionID, rowID, adjacentRowHighlighted) => {
-							return <View style={{borderWidth: .3, borderColor: '#ccc'}} key={rowID}></View>
+							return <View style={{borderWidth: .3, borderColor: '#CCC'}} key={rowID}></View>
  						}}
  				/>
 				</Modal>
@@ -234,4 +260,3 @@ const styles = StyleSheet.create({
 		paddingBottom: 50
 	},
 })
-// {/**/}
