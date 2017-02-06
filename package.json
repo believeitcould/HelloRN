@@ -20,6 +20,7 @@
     "react-native-tabs": "^1.0.9",
     "react-native-vector-icons": "^4.0.0",
     "react-native-video": "^1.0.0",
+    "react-native-viewpager": "^0.2.13",
     "react-swipeable-views-native": "^0.10.1",
     "react-swipeable-views-utils": "^0.10.1"
   },

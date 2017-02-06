@@ -7,7 +7,7 @@ react native 入门demo，适配Android iOS， 网页 图片 音乐 视频。
 
 
 ## API
----
+
 非官方公开api， 均来源与Github开源项目，感谢原作者！
 - 知乎日报
 
@@ -24,6 +24,6 @@ react native 入门demo，适配Android iOS， 网页 图片 音乐 视频。
     ``妹子图 http://i.jandan.net/?oxwlxojflwblxbsapi=jandan.get_ooxx_comments&page=${page}``
 
 ## Todo
----
+
 - 文章内容左右滑动翻页
 - 歌单滑动切换、随机播放、歌词

@@ -3,7 +3,8 @@ import {
 	AppRegistry,
   	StyleSheet,
   	Text,
-  	View
+  	View,
+    
 } from 'react-native'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -12,7 +13,8 @@ import { Scene, Router, TabBar, Modal, Schema, Actions, Reducer, ActionConst } f
 
 import Article from './tabs/article/article'
 import ArticleContent from './tabs/article/content'
-import Image from './tabs/image'
+import Image from './tabs/image/image'
+import ImageViewpager from './tabs/image/viewpager'
 import Music from './tabs/music'
 import Video from './tabs/video'
 
@@ -35,6 +37,8 @@ const reducerCreate = params => {
     return (state, action) => {
         console.log("ACTION:", action)
         return defaultReducer(state, action)
+                                    // <Scene key="articleContent" component={ArticleContent} title='文章内容' hideTabBar={true} backTitle=''/>
+
     }
 }
 
@@ -44,14 +48,14 @@ export default class Main extends Component {
             <Router>
                 <Scene key="root" hideNavBar={true}>
                     <Scene key="tabbar" tabs={true} tabBarStyle={{backgroundColor: '#FFF', borderTopWidth: 1, borderTopColor: '#BBB'}}>
-                        <Scene key="tab1" initial={true} title="知乎" icon={TabIcon} tabIcon="home" navigationBarStyle={{backgroundColor: '#ffdb42'}}>
-                            <Scene key="article" component={Article} title="知乎" />
-                            <Scene key="articleContent" component={ArticleContent} title='文章内容' hideTabBar={true} backTitle=''/>
-                        </Scene>
+                        <Scene key="tab1" initial={true} title="知乎" component={Article} icon={TabIcon} tabIcon="home" navigationBarStyle={{backgroundColor: '#ffdb42'}} />
                         <Scene key="tab2" title="妹图" icon={TabIcon} tabIcon="circle-o" navigationBarStyle={{backgroundColor: '#ffdb42'}}>
-                            <Scene key="tab2_1" component={Image} title="OOXX" />
+                            <Scene key="ooxx" component={Image} title="OOXX" />
+                            <Scene key="ooxxViewPager" component={ImageViewpager} hideNavBar hideTabBar type />
                         </Scene>
-                        <Scene key="tab3" component={Music} title="歌单" icon={TabIcon} tabIcon="music" navigationBarStyle={{backgroundColor: '#ffdb42'}} />                               
+                        <Scene key="tab3" title="歌单" icon={TabIcon} tabIcon="music" navigationBarStyle={{backgroundColor: '#ffdb42'}}>
+                            <Scene key='music' title='热歌榜' component={Music} />
+                        </Scene>                               
                         <Scene key="tab4" component={Video} title="视频" icon={TabIcon} tabIcon="tv" navigationBarStyle={{backgroundColor: '#ffdb42'}} />
                     </Scene>
                 </Scene>

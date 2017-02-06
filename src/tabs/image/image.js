@@ -10,18 +10,20 @@ import {
 	TouchableWithoutFeedback
 } from 'react-native'
 
-import LoadingSpinner from '../components/loadingSpinner'
+import { Actions } from 'react-native-router-flux'
+
+import LoadingSpinner from '../../components/loadingSpinner'
 
 let deviceWidth = Dimensions.get('window').width
 
-const ImageItem = ({ url }) => {
+const ImageItem = ({ url, images, rowID }) => {
 	let gif = url.endsWith('.gif')
 	if (gif) url = url.replace('mw690','small')
 					  .replace('mw1024','small')
 					  .replace('mw1200','small')
 
 	return (
-		<TouchableWithoutFeedback>
+		<TouchableWithoutFeedback onPress={() => Actions.ooxxViewPager({images: images, initialImage: rowID})}>
 			<View style={{justifyContent: 'center', alignItems: 'center'}}>
 				<Image 
 					style={{width: deviceWidth, height: 200}}
@@ -84,7 +86,9 @@ export default class Images extends Component {
             <View style={styles.container}>
 				<ListView
 					dataSource={this.state.imageDS}
-					renderRow={(rowData, sectionID, rowID) => <ImageItem url={rowData} key={rowID} />}
+					renderRow={(rowData, sectionID, rowID) => 
+						<ImageItem url={rowData} images={this.state.images} key={rowID} rowID={rowID} />
+					}
 				/>
             </View>
 		)

@@ -10,13 +10,16 @@ import {
 	ScrollView,
 	TouchableOpacity,
 	TouchableWithoutFeedback,
-	
+	CameraRoll,
+	Animated
 } from 'react-native'
 
 import { Actions } from 'react-native-router-flux'
 import SwipeableViews from 'react-swipeable-views-native'
 import { autoPlay } from 'react-swipeable-views-utils'
 import Video from 'react-native-video'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import Toast from 'react-native-root-toast'
 // import Slider from 'react-native-slider'
 
 import LoadingSpinner from '../../components/loadingSpinner'
@@ -51,6 +54,9 @@ export default class Article extends Component {
 		this.state = {
 			stories: ds,
 			topStories: [],
+			modalSize: new Animated.Value(.5),
+			modalOpacity: new Animated.Value(0),
+			modalHide: true
 		}
   	}
 
@@ -69,6 +75,9 @@ export default class Article extends Component {
 		// 		})
 		// 		this._swiperViews(res.top_stories)
 		// 	})
+		// this.state.bounceValue.setValue(1.0)
+		
+		
 	}
 
 	_swiperViews(topStories) {
@@ -94,13 +103,61 @@ export default class Article extends Component {
 		})
 	}
 
-	
+	_renderModal() {
+		const animatedDuration = 400
+		let animated, modalSize = .5, modalOpacity = 0.0
+		if (this.state.modalHide) {
+			modalSize = 1.0,
+			modalOpacity = 1.0
+		}
+		animated = Animated.parallel([
+			Animated.timing(this.state.modalSize,{
+				toValue: modalSize,
+				duration: animatedDuration,
+			}),
+			Animated.timing(this.state.modalOpacity,{
+				toValue: modalOpacity,
+				duration: animatedDuration,
+			})
+		])
+		
+		animated.start(() => this.setState({modalHide: !this.state.modalHide}))
+					
+	}
 
 	render() {
 		return (
 			<View style={styles.container}>
+				<TouchableWithoutFeedback onPress={() => this._renderModal()}
+				>
+				<Image
+					source={{uri: 'http://wx3.sinaimg.cn/mw600/006GlaT2ly1fcgte21y1zj30m90xcn4a.jpg'}}
+					style={{width: 200, height: 200}}
+				/>
+				</TouchableWithoutFeedback>
 				
-				<LoadingSpinner animating={true} />
+				<Animated.View                         // 可选的基本组件类型: Image, Text, View
+					style={{
+					position: 'absolute',
+					top: 0,
+					left: 0,
+					zIndex: 100000,
+					opacity: this.state.modalOpacity,
+					transform: [                        // `transform`是一个有序数组（动画按顺序执行）
+						{scale: this.state.modalSize},  // 将`bounceValue`赋值给 `scale`
+					]
+					}}
+				>
+					<TouchableWithoutFeedback onPress={() => this._renderModal()}>
+						<Image 
+							source={{uri: 'http://wx3.sinaimg.cn/mw600/006GlaT2ly1fcgte21y1zj30m90xcn4a.jpg'}}
+							style={{width:300,height: 300}}
+						/>
+					</TouchableWithoutFeedback>
+					
+				</Animated.View>
+				<Text>123</Text>
+				
             </View>
 		)
 	}
@@ -146,7 +203,7 @@ const styles = StyleSheet.create({
 	height: 0
   },
 })
-
+{/*<LoadingSpinner animating={true} />*/}
 {/*<ScrollView>
 					<AutoPlaySwipeableViews
 						ref='swiper'
