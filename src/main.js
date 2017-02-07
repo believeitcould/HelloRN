@@ -16,7 +16,7 @@ import ArticleContent from './tabs/article/content'
 import Image from './tabs/image/image'
 import ImageViewpager from './tabs/image/viewpager'
 import Music from './tabs/music'
-import Video from './tabs/video'
+import Map from './tabs/map/map'
 
 console.disableYellowBox = true    //关闭warning
 
@@ -48,7 +48,10 @@ export default class Main extends Component {
             <Router>
                 <Scene key="root" hideNavBar={true}>
                     <Scene key="tabbar" tabs={true} tabBarStyle={{backgroundColor: '#FFF', borderTopWidth: 1, borderTopColor: '#BBB'}}>
-                        <Scene key="tab1" initial={true} title="知乎" component={Article} icon={TabIcon} tabIcon="home" navigationBarStyle={{backgroundColor: '#ffdb42'}} />
+                        <Scene key="tab1" initial={true} title="知乎" icon={TabIcon} tabIcon="home" navigationBarStyle={{backgroundColor: '#ffdb42'}} >
+                            <Scene key='article'  component={Article} title='你知道吗' />
+                            <Scene key='articleContent'  component={ArticleContent} title='文章内容' hideTabBar/>
+                        </Scene>
                         <Scene key="tab2" title="妹图" icon={TabIcon} tabIcon="circle-o" navigationBarStyle={{backgroundColor: '#ffdb42'}}>
                             <Scene key="ooxx" component={Image} title="OOXX" />
                             <Scene key="ooxxViewPager" component={ImageViewpager} hideNavBar hideTabBar type />
@@ -56,7 +59,9 @@ export default class Main extends Component {
                         <Scene key="tab3" title="歌单" icon={TabIcon} tabIcon="music" navigationBarStyle={{backgroundColor: '#ffdb42'}}>
                             <Scene key='music' title='热歌榜' component={Music} />
                         </Scene>                               
-                        <Scene key="tab4" component={Video} title="视频" icon={TabIcon} tabIcon="tv" navigationBarStyle={{backgroundColor: '#ffdb42'}} />
+                        <Scene key="tab4" title="地图" icon={TabIcon} tabIcon="map-marker" navigationBarStyle={{backgroundColor: '#ffdb42'}}>
+                            <Scene key='map' title='我在哪' component={Map} />
+                        </Scene>
                     </Scene>
                 </Scene>
                 

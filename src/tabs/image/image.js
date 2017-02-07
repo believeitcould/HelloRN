@@ -7,46 +7,48 @@ import {
 	ListView,
 	Image,
 	Dimensions,
-	TouchableWithoutFeedback
+	TouchableWithoutFeedback,
+	RefreshControl
 } from 'react-native'
 
 import { Actions } from 'react-native-router-flux'
 
 import LoadingSpinner from '../../components/loadingSpinner'
+import ImageModal from '../../components/imageModal'
 
 let deviceWidth = Dimensions.get('window').width
 
-const ImageItem = ({ url, images, rowID }) => {
-	let gif = url.endsWith('.gif')
-	if (gif) url = url.replace('mw690','small')
+const ImageItem = ({ url, images, rowID, t }) => {
+	let gif = url.endsWith('.gif'), newUrl = url
+	if (gif) newUrl = url.replace('mw690','small')
 					  .replace('mw1024','small')
 					  .replace('mw1200','small')
 
 	return (
-		<TouchableWithoutFeedback onPress={() => Actions.ooxxViewPager({images: images, initialImage: rowID})}>
-			<View style={{justifyContent: 'center', alignItems: 'center'}}>
+		<TouchableWithoutFeedback onPress={() => {t.setState({modalUri: url})
+			console.log('image')}}>
+			<View style={{padding: 10, margin: 10, borderRadius: 5, backgroundColor: '#FFF'}}>
 				<Image 
-					style={{width: deviceWidth, height: 200}}
+					style={{
+						flex: 1,
+						height: 200,
+						justifyContent: 'center',
+						alignItems: 'center'
+					}}
 					resizeMode='cover'
-					source={{uri: url}}
-				/>
-				{
-					gif ?
-					<Text
-						style={{
-							position: 'absolute',
-							backgroundColor: 'transparent',
-							color: '#FFF',
-							fontSize: 18,
-							left: deviceWidth / 2 - 20,
-							top: 90
-						}}
-					>
-						PLAY
+					source={{uri: newUrl}}
+				>
+				<Text
+					style={{
+						backgroundColor: 'transparent',
+						color: '#FFF',
+						fontSize: 18
+					}}
+				>
+						{gif && 'PLAY'}
 					</Text>
-					:
-					null
-				}
+				</Image>
+				
 			</View>
 		</TouchableWithoutFeedback>
 	)
@@ -60,24 +62,45 @@ export default class Images extends Component {
 		this.state = {
 			imageDS: ds,
 			images: [],
+			isRefreshing: false,
+			currentPage: 1,
+			modalUri: '',
 		}
 	}
 
 	componentDidMount() {
-		let url = 'http://i.jandan.net/?oxwlxojflwblxbsapi=jandan.get_ooxx_comments&page='
+		this._fetchImages()
+	}
+	
+	_fetchImages(page = 1, callback) {
+		let url = 'http://i.jandan.net/?oxwlxojflwblxbsapi=jandan.get_ooxx_comments&page=' + page
 		fetch(url)
 			.then((res) => res.json())
 			.then((res) => {
-				let tmp = this.state.images
+				let tmp = page == 1 ? [] : this.state.images
 				res.comments.forEach((ele, index, arr) => {
 					tmp = tmp.concat(ele.pics)
 				})
-				console.log(tmp)
+				console.log(tmp.length)
+				// let ds = page == 1 ? new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}) : this.state.imageDS
 				this.setState({
 					imageDS: this.state.imageDS.cloneWithRows(tmp),
-					images: tmp
-				})
+					images: tmp,
+					currentPage: page
+				}, callback && callback())
 			})
+	}
+
+	_onRefresh() {
+		this.setState({isRefreshing: true})
+		// setTimeout(()=>this.setState({isRefreshing: false}),2000)
+		this._fetchImages(1,this.setState({isRefreshing: false}))
+	}
+
+	_onLoadMore() {
+		let page = ++this.state.currentPage
+		console.log(page)
+		this._fetchImages(page)
 	}
 
 	render() {
@@ -87,9 +110,23 @@ export default class Images extends Component {
 				<ListView
 					dataSource={this.state.imageDS}
 					renderRow={(rowData, sectionID, rowID) => 
-						<ImageItem url={rowData} images={this.state.images} key={rowID} rowID={rowID} />
+						<ImageItem url={rowData} images={this.state.images} key={rowID} rowID={rowID} t={this} />
 					}
+					refreshControl={
+						<RefreshControl
+							refreshing={this.state.isRefreshing}
+							onRefresh={() => this._onRefresh()}
+							tintColor="#FFDB42"
+							title='拼命加载中'
+							titleColor="black"
+							colors={['#ff0000', '#00ff00', '#0000ff']}
+							progressBackgroundColor="#FFDB42"
+						/>
+					}
+					onEndReachedThreshold={250}
+					onEndReached={() => this._onLoadMore()}
 				/>
+				<ImageModal uri={this.state.modalUri} images={this.state.images} />
             </View>
 		)
 	}
@@ -99,6 +136,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		paddingTop: 60,
-		paddingBottom: 50
+		paddingBottom: 50,
+		backgroundColor: '#EEE'
 	},
 })
