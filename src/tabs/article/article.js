@@ -12,26 +12,18 @@ import {
 	TouchableWithoutFeedback,
 	CameraRoll,
 	Animated,
-	Button,
 	Platform
 } from 'react-native'
 
 import { Actions } from 'react-native-router-flux'
 import SwipeableViews from 'react-swipeable-views-native'
 import { autoPlay } from 'react-swipeable-views-utils'
-import Video from 'react-native-video'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import Toast from 'react-native-root-toast'
-import MapView from 'react-native-maps'
-// import Slider from 'react-native-slider'
 
 import LoadingSpinner from '../../components/loadingSpinner'
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews)
 
 let deviceWidth = Dimensions.get('window').width
-
-
 
 const ListItem = ({ data }) => {
 	return (
@@ -71,7 +63,6 @@ export default class Article extends Component {
 				return data.json()
 			})
 			.then((res) => {
-				console.log(res.stories)
 				this.setState({
 					stories: this.state.stories.cloneWithRows(res.stories),
 				})

@@ -12,8 +12,6 @@ import {
 	Platform
 } from 'react-native'
 
-import { Actions } from 'react-native-router-flux'
-
 import LoadingSpinner from '../../components/loadingSpinner'
 import ImageModal from '../../components/imageModal'
 
@@ -82,8 +80,6 @@ export default class Images extends Component {
 				res.comments.forEach((ele, index, arr) => {
 					tmp = tmp.concat(ele.pics)
 				})
-				console.log(tmp.length)
-				// let ds = page == 1 ? new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}) : this.state.imageDS
 				this.setState({
 					imageDS: this.state.imageDS.cloneWithRows(tmp),
 					images: tmp,
@@ -94,13 +90,11 @@ export default class Images extends Component {
 
 	_onRefresh() {
 		this.setState({isRefreshing: true})
-		// setTimeout(()=>this.setState({isRefreshing: false}),2000)
 		this._fetchImages(1,this.setState({isRefreshing: false}))
 	}
 
 	_onLoadMore() {
 		let page = ++this.state.currentPage
-		console.log(page)
 		this._fetchImages(page)
 	}
 
@@ -116,7 +110,7 @@ export default class Images extends Component {
 					refreshControl={
 						<RefreshControl
 							refreshing={this.state.isRefreshing}
-							onRefresh={() => this._onRefresh()}
+							onRefresh={this._onRefresh.bind(this)}
 							tintColor='#FFDB42'
 							title='拼命加载中'
 							titleColor="black"
@@ -125,7 +119,7 @@ export default class Images extends Component {
 						/>
 					}
 					onEndReachedThreshold={250}
-					onEndReached={() => this._onLoadMore()}
+					onEndReached={this._onLoadMore.bind(this)}
 				/>
 				<ImageModal
 					uri={this.state.modalUri}

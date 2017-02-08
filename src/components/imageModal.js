@@ -13,7 +13,6 @@ import {
 	Platform
 } from 'react-native'
 
-import ViewPager from 'react-native-viewpager'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Toast from 'react-native-root-toast'
 
@@ -26,11 +25,8 @@ export default class ImageModal extends Component {
 
 	constructor() {
 		super()
-		const ds = new ViewPager.DataSource({pageHasChanged: (p1, p2) => p1 !== p2})
 
 		this.state = {
-			dataSource: ds,
-			initialImage: 0,
 			modalSize: new Animated.Value(0.5),
 			modalOpacity: new Animated.Value(1.0),
 			modalWidth: new Animated.Value(deviceWidth),
@@ -40,14 +36,10 @@ export default class ImageModal extends Component {
   	}
 	
 	componenetDidMount() {
-		this.setState({
-			dataSource: this.state.dataSource.cloneWithRows(this.props.images),
-			initialImage: this.props.currentImage,
-		})
+		
 	}
 
 	componentDidUpdate() {
-		console.log('update')
 		this.props.hide ? this._hideModal() : this._showModal()
 	}
 
@@ -91,8 +83,30 @@ export default class ImageModal extends Component {
 		animated.start()
 	}
 
+	_renderSaveBtn() {
+		if (Platform.OS === 'ios') {
+			return (
+				<TouchableOpacity 
+					style={{position: 'absolute', backgroundColor:'rgba(0,0,0,.5)',padding: 10,borderRadius:20,bottom:40,right: 30}}
+					onPress={() => {
+						let a = CameraRoll.saveToCameraRoll(this.props.uri,'photo')
+							a.then((e) => Toast.show('保存成功',{
+											position: Toast.positions.CENTER,
+								})
+							)
+							a.catch((e) => Toast.show(e.message,{
+								position: Toast.positions.CENTER,
+								})
+							)
+					}}
+				>
+					<Icon name='download' size={20} color='#FFDB42' />
+				</TouchableOpacity>
+			)
+		}
+	}
+
 	render() {
-		console.log('render')
 		if (!this.props.uri) return <View></View>
 		return (
                 <Animated.View
@@ -123,23 +137,8 @@ export default class ImageModal extends Component {
 						onLoadEnd={() => console.log('end')}
 						onProgress={(e) => console.log(e.nativeEvent)}
 					>
-						<TouchableOpacity 
-							style={{position: 'absolute', backgroundColor:'rgba(0,0,0,.5)',padding: 10,borderRadius:20,bottom:40,right: 30}}
-							onPress={() => {
-								let a = CameraRoll.saveToCameraRoll(this.props.uri,'photo')
-									a.then((e) => Toast.show('保存成功',{
-										position: Toast.positions.CENTER,
-										})
-									)
-									a.catch((e) => Toast.show(e.message,{
-										position: Toast.positions.CENTER,
-										})
-									)
-							}}
-						>
-							<Icon name='download' size={20} color='#FFDB42' />
-						</TouchableOpacity>
-					
+						
+					{this._renderSaveBtn()}
 					{this.state.loading && <LoadingSpinner animating={true} />}
 					
 					</Image>
