@@ -24,7 +24,8 @@ export default class Map extends Component {
 			this.setState({
 				latitude: res.coords.latitude,
 				longitude: res.coords.longitude
-			},this._moveToSelf)
+			}, this._moveToSelf)
+			console.log(res)
 		})
 	}
 

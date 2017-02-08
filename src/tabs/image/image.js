@@ -8,7 +8,8 @@ import {
 	Image,
 	Dimensions,
 	TouchableWithoutFeedback,
-	RefreshControl
+	RefreshControl,
+	Platform
 } from 'react-native'
 
 import { Actions } from 'react-native-router-flux'
@@ -25,8 +26,7 @@ const ImageItem = ({ url, images, rowID, t }) => {
 					  .replace('mw1200','small')
 
 	return (
-		<TouchableWithoutFeedback onPress={() => {t.setState({modalUri: url})
-			console.log('image')}}>
+		<TouchableWithoutFeedback onPress={() => {t.setState({modalUri: url, modalHide: false})}}>
 			<View style={{padding: 10, margin: 10, borderRadius: 5, backgroundColor: '#FFF'}}>
 				<Image 
 					style={{
@@ -35,7 +35,7 @@ const ImageItem = ({ url, images, rowID, t }) => {
 						justifyContent: 'center',
 						alignItems: 'center'
 					}}
-					resizeMode='cover'
+					resizeMethod='scale'
 					source={{uri: newUrl}}
 				>
 				<Text
@@ -65,6 +65,7 @@ export default class Images extends Component {
 			isRefreshing: false,
 			currentPage: 1,
 			modalUri: '',
+			modalHide: true
 		}
 	}
 
@@ -116,17 +117,21 @@ export default class Images extends Component {
 						<RefreshControl
 							refreshing={this.state.isRefreshing}
 							onRefresh={() => this._onRefresh()}
-							tintColor="#FFDB42"
+							tintColor='#FFDB42'
 							title='拼命加载中'
 							titleColor="black"
-							colors={['#ff0000', '#00ff00', '#0000ff']}
+							colors={['black']}
 							progressBackgroundColor="#FFDB42"
 						/>
 					}
 					onEndReachedThreshold={250}
 					onEndReached={() => this._onLoadMore()}
 				/>
-				<ImageModal uri={this.state.modalUri} images={this.state.images} />
+				<ImageModal
+					uri={this.state.modalUri}
+					hide={this.state.modalHide}
+					onPress={()=>this.setState({modalHide: true})}
+				/>
             </View>
 		)
 	}
@@ -135,7 +140,7 @@ export default class Images extends Component {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingTop: 60,
+		paddingTop: Platform.OS === 'ios' ? 60 : 54,
 		paddingBottom: 50,
 		backgroundColor: '#EEE'
 	},

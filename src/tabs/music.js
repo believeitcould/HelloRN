@@ -9,7 +9,8 @@ import {
 	Slider,
 	TouchableOpacity,
 	ListView,
-	TouchableWithoutFeedback
+	TouchableWithoutFeedback,
+	Platform
 } from 'react-native'
 
 import { Actions } from 'react-native-router-flux'
@@ -48,11 +49,7 @@ const SongItem = ({ data, rowID, t }) => {
 				<Text style={{color: current ? 'red' : 'black'}}>{data.name}</Text>
 				<Text style={{fontSize: 11, color: current ? 'red' : '#AAA'}}> - {data.artists[0].name}</Text>
 			</View>
-				{current ?
-					<Icon name='play' size={12} color='red' />
-					:
-					null
-				}		
+				{ current && <Icon name='play' size={12} color='red' /> }		
 			</View>
 		</TouchableOpacity>
 	)
@@ -68,8 +65,8 @@ export default class Music extends Component {
 			songs: [],
 			currentSong: {},
 			sliderValue: 0,
-			videoPause: true,
-			playButton: 'play-circle',
+			videoPause: false,
+			playButton: 'pause-circle',
 			current: '00:00',
 		}
   	}
@@ -92,7 +89,8 @@ export default class Music extends Component {
 				this.setState({
 					songDS: this.state.songDS.cloneWithRows(songs),
 					songs: songs,
-					currentSong: songs[0]
+					currentSong: songs[0],
+					
 				})
 			})
 	}
@@ -210,12 +208,13 @@ export default class Music extends Component {
 				
 				<Modal style={styles.modal} position={"bottom"} ref='modal'>
 					<ListView
+						initialListSize={20}
  						dataSource={this.state.songDS}
  						renderRow={(rowData, sectionID, rowID) => <SongItem data={rowData} key={rowID} rowID={rowID} t={this} />}
  						renderSeparator={(sectionID, rowID, adjacentRowHighlighted) => {
 							return <View style={{borderWidth: .3, borderColor: '#CCC'}} key={rowID}></View>
  						}}
- 				/>
+ 					/>
 				</Modal>
             </View>
 		)
@@ -226,7 +225,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: '#FFF',
-		paddingTop: 60,
+		paddingTop: Platform.OS === 'ios' ? 60 : 54,
 		paddingBottom: 50
 	},
 	image: {

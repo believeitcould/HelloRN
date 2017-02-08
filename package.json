@@ -1,37 +1,38 @@
 {
-    "name": "HelloRN",
-    "version": "0.0.1",
-    "private": true,
-    "scripts": {
-        "start": "node node_modules/react-native/local-cli/cli.js start",
-        "test": "jest"
-    },
-    "dependencies": {
-        "react": "~15.4.0-rc.4",
-        "react-native": "0.40.0",
-        "react-native-action-button": "^2.0.20",
-        "react-native-animatable": "^1.1.0",
-        "react-native-button": "^1.7.1",
-        "react-native-maps": "0.13.0",
-        "react-native-modalbox": "^1.3.8",
-        "react-native-root-toast": "^1.0.3",
-        "react-native-router-flux": "^3.37.0",
-        "react-native-scrollable-tab-view": "^0.7.1",
-        "react-native-slider": "^0.9.1",
-        "react-native-tabs": "^1.0.9",
-        "react-native-vector-icons": "^4.0.0",
-        "react-native-video": "^1.0.0",
-        "react-native-viewpager": "^0.2.13",
-        "react-swipeable-views-native": "^0.10.1",
-        "react-swipeable-views-utils": "^0.10.1"
-    },
-    "devDependencies": {
-        "babel-jest": "18.0.0",
-        "babel-preset-react-native": "1.9.1",
-        "jest": "18.1.0",
-        "react-test-renderer": "~15.4.0-rc.4"
-    },
-    "jest": {
-        "preset": "react-native"
-    }
+  "name": "HelloRN",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "react": "~15.4.0-rc.4",
+    "react-native": "0.40.0",
+    "react-native-action-button": "^2.0.20",
+    "react-native-animatable": "^1.1.0",
+    "react-native-button": "^1.7.1",
+    "react-native-maps": "0.13.0",
+    "react-native-modalbox": "^1.3.8",
+    "react-native-root-toast": "^1.0.3",
+    "react-native-router-flux": "^3.37.0",
+    "react-native-scrollable-tab-view": "^0.7.1",
+    "react-native-slider": "^0.9.1",
+    "react-native-splash-screen": "^2.0.0",
+    "react-native-tabs": "^1.0.9",
+    "react-native-vector-icons": "^4.0.0",
+    "react-native-video": "^1.0.0",
+    "react-native-viewpager": "^0.2.13",
+    "react-swipeable-views-native": "^0.10.1",
+    "react-swipeable-views-utils": "^0.10.1"
+  },
+  "devDependencies": {
+    "babel-jest": "18.0.0",
+    "babel-preset-react-native": "1.9.1",
+    "jest": "18.1.0",
+    "react-test-renderer": "~15.4.0-rc.4"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
 }

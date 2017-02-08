@@ -1,6 +1,6 @@
 # HelloRN
 
-react native 入门demo，适配Android iOS， 网页 图片 音乐 视频。
+react native 入门demo，适配Android iOS， 网页 图片 音乐 地图。
 
 
 ## Screen Shot
@@ -8,7 +8,7 @@ react native 入门demo，适配Android iOS， 网页 图片 音乐 视频。
 
 ## API
 
-非官方公开api， 均来源与Github开源项目，感谢原作者！
+非官方公共api， 均来源于Github开源项目，感谢原作者！
 - 知乎日报
 
     ``热门列表  http://news-at.zhihu.com/api/4/news/latest``
@@ -23,8 +23,10 @@ react native 入门demo，适配Android iOS， 网页 图片 音乐 视频。
 
     ``妹子图 http://i.jandan.net/?oxwlxojflwblxbsapi=jandan.get_ooxx_comments&page=${page}``
 
-## Todo
+## TODOS
 
 - 文章内容左右滑动翻页
 - 文章 右上角 在浏览器中打开    
-- 歌单滑动切换、随机播放、歌词
+- 歌单滑动切换、随机播放
+- 妹图Image高度自适应
+- 数据缓存

@@ -9,7 +9,8 @@ import {
 	Dimensions,
 	TouchableWithoutFeedback,
 	CameraRoll,
-	TouchableOpacity
+	TouchableOpacity,
+	Platform
 } from 'react-native'
 
 import ViewPager from 'react-native-viewpager'
@@ -41,8 +42,13 @@ export default class ImageModal extends Component {
 	componenetDidMount() {
 		this.setState({
 			dataSource: this.state.dataSource.cloneWithRows(this.props.images),
-			initialImage: this.props.currentImage
+			initialImage: this.props.currentImage,
 		})
+	}
+
+	componentDidUpdate() {
+		console.log('update')
+		this.props.hide ? this._hideModal() : this._showModal()
 	}
 
 	_showModal() {
@@ -85,31 +91,16 @@ export default class ImageModal extends Component {
 		animated.start()
 	}
 
-	_renderPage(data, pageID) {
-		console.log(pageID)
-		return (
-			<TouchableWithoutFeedback onPress={() => this._hideModal()}>
-				<Image 
-					source={{uri: data}}
-					style={{flex: 1}}
-					resizeMode='contain'
-					onProgress={(e) => console.log(e.nativeEvent)}
-				/>
-			</TouchableWithoutFeedback>
-			
-		)
-	}
-
 	render() {
+		console.log('render')
 		if (!this.props.uri) return <View></View>
-		this._showModal()
 		return (
                 <Animated.View
 					style={{
 						position: 'absolute',
 						top: 0,
 						left: 0,
-						paddingTop: 60,
+						paddingTop: Platform.OS === 'ios' ? 60 : 54,
 						paddingBottom: 50,
 						width: this.state.modalWidth,
 						height: deviceHeight,
@@ -121,13 +112,15 @@ export default class ImageModal extends Component {
 						]
 					}}
 				>
-				<TouchableWithoutFeedback onPress={() => this._hideModal()}>
+				<TouchableWithoutFeedback onPress={this.props.onPress}>
 					<Image 
 						source={{uri: this.props.uri}}
 						style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
-						resizeMode='contain'
+						resizeMode='cover'
+						resizeMethod='scale'
 						onLoadStart={() => this.setState({loading: true})}
 						onLoad={() => this.setState({loading: false})}
+						onLoadEnd={() => console.log('end')}
 						onProgress={(e) => console.log(e.nativeEvent)}
 					>
 						<TouchableOpacity 
@@ -158,8 +151,8 @@ export default class ImageModal extends Component {
 }
 
 ImageModal.propTypes = {
-   uri: PropTypes.string.isRequired,
-   images: PropTypes.array.isRequired
+	hide: PropTypes.bool.isRequired,
+   	uri: PropTypes.string.isRequired,
 }
 
 const styles = StyleSheet.create({

@@ -4,12 +4,14 @@ import {
   	StyleSheet,
   	Text,
   	View,
-    
+    ToastAndroid,
+    Platform
 } from 'react-native'
-import ScrollableTabView from 'react-native-scrollable-tab-view'
+
 import Icon from 'react-native-vector-icons/FontAwesome'
-import Tabs from 'react-native-tabs'
 import { Scene, Router, TabBar, Modal, Schema, Actions, Reducer, ActionConst } from 'react-native-router-flux'
+import SplashScreen from 'react-native-splash-screen'
+
 
 import Article from './tabs/article/article'
 import ArticleContent from './tabs/article/content'
@@ -18,7 +20,7 @@ import ImageViewpager from './tabs/image/viewpager'
 import Music from './tabs/music'
 import Map from './tabs/map/map'
 
-console.disableYellowBox = true    //关闭warning
+console.disableYellowBox = false    //关闭warning
 
 class TabIcon extends React.Component {
     render() {
@@ -32,20 +34,43 @@ class TabIcon extends React.Component {
     }
 }
 
-const reducerCreate = params => {
-    const defaultReducer = Reducer(params)
-    return (state, action) => {
-        console.log("ACTION:", action)
-        return defaultReducer(state, action)
-                                    // <Scene key="articleContent" component={ArticleContent} title='文章内容' hideTabBar={true} backTitle=''/>
-
-    }
-}
+// const reducerCreate = params => {
+//     const defaultReducer = Reducer(params)
+//     return (state, action) => {
+//         console.log("ACTION:", action)
+//         return defaultReducer(state, action)
+//     }
+// }
 
 export default class Main extends Component {
+
+    componentDidMount() {
+        // setTimeout(SplashScreen.hide, 500)
+        SplashScreen.hide()
+        // this.int = 0
+        // this.timer = setInterval(() => {console.log(this.int), this.int ++}, 1000)
+    }
+
+    componentWillUnmount() {
+        this.timer && clearInterval(this.timer)
+    }
+
+    _backAndroidHandler() {
+        if (Platform.OS === 'android') {
+            if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+                return false
+            }
+            this.lastBackPressed = Date.now()
+            ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT)
+            return true
+        }else {
+            return true
+        }
+    }
+
 	render() {
 		return (
-            <Router>
+            <Router onExitApp={this._backAndroidHandler}>
                 <Scene key="root" hideNavBar={true}>
                     <Scene key="tabbar" tabs={true} tabBarStyle={{backgroundColor: '#FFF', borderTopWidth: 1, borderTopColor: '#BBB'}}>
                         <Scene key="tab1" initial={true} title="知乎" icon={TabIcon} tabIcon="home" navigationBarStyle={{backgroundColor: '#ffdb42'}} >
@@ -78,45 +103,4 @@ const styles = StyleSheet.create({
 		backgroundColor: '#FFF',
 	},
 })
-// <Scene key="register" component={Register} title="Register"/>
-//                         <Scene key="register2" component={Register} title="Register2" duration={1}/>
-//                         <Scene key="home" component={Home} title="Replace" type={ActionConst.REPLACE}/>
-//                         <Scene key="launch" component={Launch} title="Launch" initial={true} style={{flex:1, backgroundColor:'transparent'}}/>
-//                         <Scene key="login" direction="vertical">
-//                             <Scene key="loginModal" component={Login} schema="modal" title="Login"/>
-//                             <Scene key="loginModal2" hideNavBar={true} component={Login2} title="Login2"/>
-//                         </Scene>
-// <Tabs>
-//                 <Article tabLabel="文章" />
-//                 <Image tabLabel="图片" />
-//                 <Music tabLabel="音乐" />
-//                 <Video tabLabel="视频" />
-//             </Tabs>
-// <ScrollableTabView tabBarPosition="bottom">
-//                 <Article tabLabel="article" />
-//                 <Image tabLabel="image" />
-//                 <Music tabLabel="music" />
-//                 <Video tabLabel="video" />
-//             </ScrollableTabView>
 
-
-// <Router createReducer={reducerCreate} sceneStyle={{backgroundColor:'#F7F7F7'}}>
-//                 <Scene key="modal" component={Modal} >
-//                     <Scene key="root" hideNavBar={true}>
-//                         <Scene key="tabbar" tabs={true} tabBarStyle={{backgroundColor:'#fff',borderTopWidth:.5,borderTopColor:'#ccc'}}>
-//                             <Scene key="tab1" initial={true} title="知乎" icon={TabIcon} tabIcon="home" component={Article} navigationBarStyle={{backgroundColor: '#ffdb42'}} titleStyle={{color:'black'}} />
-//                             <Scene key="tab2" title="妹图" icon={TabIcon} tabIcon="circle-o">
-//                                 <Scene key="tab2_1" component={Image} title="Tab #2_1" onLeft={()=>alert("Left button!")} leftTitle="Left"/>
-//                                 <Scene key="tab2_2" component={Image} title="Tab #2_2" />
-//                             </Scene>
-//                             <Scene key="tab4" title="歌单" hideNavBar={true} icon={TabIcon} tabIcon="music">
-//                                 <Scene key="dddd" component={Music} />
-//                                 <Scene key="articleContent" component={ArticleContent} />
-//                             </Scene>
-//                             <Scene key="tab5" component={Video} title="视频" icon={TabIcon} tabIcon="tv" />
-//                         </Scene>
-                        
-//                     </Scene>
-//                     <Scene key="error" component={Error} />
-//                 </Scene>
-//             </Router>

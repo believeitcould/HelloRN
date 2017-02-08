@@ -12,7 +12,8 @@ import {
 	TouchableWithoutFeedback,
 	CameraRoll,
 	Animated,
-	Button
+	Button,
+	Platform
 } from 'react-native'
 
 import { Actions } from 'react-native-router-flux'
@@ -76,8 +77,7 @@ export default class Article extends Component {
 				})
 				this._swiperViews(res.top_stories)
 			})
-		
-	}
+}
 
 	_swiperViews(topStories) {
 		let views = []
@@ -161,7 +161,7 @@ export default class Article extends Component {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingTop: 60,
+		paddingTop: Platform.OS === 'ios' ? 60 : 54,
 		paddingBottom: 50
 	},
 	listItem: {
@@ -195,12 +195,3 @@ const styles = StyleSheet.create({
 		textAlign: 'center'
 	}
 })
-
-{/*<Image
-					source={{uri: 'http://wx2.sinaimg.cn/mw600/005Yg2ealy1fch2an32xuj30jg0t6q65.jpg'}}
-					style={{flex: 1,justifyContent: 'center'}}
-				>
-				<Text style={{backgroundColor:'transparent'}}>123sssss</Text>
-
-				</Image>*/}
-{/*<LoadingSpinner animating={true} />*/}

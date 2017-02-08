@@ -5,7 +5,8 @@ import {
   	Text,
   	View,
 	TouchableOpacity,
-	WebView
+	WebView,
+	Platform
 } from 'react-native'
 
 import { Actions } from 'react-native-router-flux'
@@ -23,6 +24,14 @@ export default class Image extends Component {
 	}
 
 	componentDidMount() {
+		this.timer = setTimeout(() => this._fetch(),400)
+	}
+
+	componentWillUnmount() {
+        this.timer && clearTimeout(this.timer)
+    }
+
+	_fetch() {
 		fetch('http://news-at.zhihu.com/api/4/news/' + this.props.articleID)
 			.then((response) => response.json())
 			.then((responseJson) => {
@@ -55,6 +64,6 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: '#F5FCFF',
-		paddingTop: 60
+		paddingTop: Platform.OS === 'ios' ? 60 : 54,
 	},
 })

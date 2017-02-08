@@ -1,5 +1,8 @@
 package com.hellorn;
 
+import android.os.Bundle;
+
+import com.cboy.rn.splashscreen.SplashScreen;
 import com.facebook.react.ReactActivity;
 
 public class MainActivity extends ReactActivity {
@@ -11,5 +14,11 @@ public class MainActivity extends ReactActivity {
     @Override
     protected String getMainComponentName() {
         return "HelloRN";
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        SplashScreen.show(this);  // 添加这一句
+        super.onCreate(savedInstanceState);
     }
 }
