@@ -4,8 +4,19 @@ react native 入门demo，适配android ios， 网页 图片 音乐 地图。
 
 ## Screen Shot
 
-![androidScreen](./screenShot/androidScreen.gif)![iosScreen](./screenShot/iosScreen.gif)
+![androidScreen](./screenShot/androidScreen.gif)		![iosScreen](./screenShot/iosScreen.gif)
 
+
+
+## RUN
+
+```shell
+cd HelloRN
+npm install
+react-native run-android or react-native run-ios
+```
+
+For iOS, you can open **HelloRN.xcodeproj** in Xcode, choose one simulator or you device, click run.
 
 ## API
 
@@ -40,6 +51,7 @@ react native 入门demo，适配android ios， 网页 图片 音乐 地图。
 
 ## Notes
 
-1. 国内android无法运行Google Maps
-2. video组件在android下无法获取歌曲错误信息（如404），导致界面卡顿，原因不明
-3. simulator iPhone 6 地图界面出现错误，’permission denied‘，原因不明，其他机型simulator正常。
+1. 国内android无法运行Google Maps。
+2. video组件在android下无法获取歌曲错误信息（如404），导致界面卡顿，原因不明。
+3. simulator iPhone 6 地图界面出现错误，’permission denied‘，原因不明，其他机型simulator 真机正常。
+4. android还没找到保存照片的方法。
