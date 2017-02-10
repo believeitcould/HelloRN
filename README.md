@@ -26,6 +26,9 @@ For iOS, you can open **HelloRN.xcodeproj** in Xcode, choose one simulator or yo
   ```
   热门列表  http://news-at.zhihu.com/api/4/news/latest
   ```
+  ```
+  文章内容  http://news-at.zhihu.com/api/4/news/${id}
+  ```
 
 - 网易云歌单
 
